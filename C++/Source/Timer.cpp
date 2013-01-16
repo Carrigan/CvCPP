@@ -27,6 +27,9 @@
 // For the max clock:
 Timer::Timer()
 {
+	// Enable Clock
+	SIM_SCGC6 |= 0x01000000;
+	
 	// Interrupt enabled, divide by 128 (16ms)
 	TPM0_SC = 0x00000043;
 	
