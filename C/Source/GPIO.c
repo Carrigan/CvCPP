@@ -24,45 +24,49 @@
 #include "GPIO.h"
 #include "MKL25Z4.h"
 
-GPIO::GPIO(Pin pPin)
+void gpioInit()
 {
-	
+	// Clock up
 	SIM_SCGC5 |= (SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTC_MASK |   SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTE_MASK );
+	
+	// Initialize Pins
+	PORTB_PCR18 = 0x00000100;
+	PORTB_PCR19 = 0x00000100;
+	GPIOB_PDDR |= 0x000C0000;
+	PORTD_PCR1 = 0x00000100;
+	GPIOD_PDDR |= 0x00000002;
+}
+
+
+void gpioDigitalWrite(DigitalState pDigitalState, Pin pPin)
+{
+	unsigned int *bitSet;
+	unsigned int *bitClear;
+	unsigned int bitMask;
 	
 	switch(pPin)
 	{
-		case(PTB18):
-			PORTB_PCR18 = 0x00000100;
-			GPIOB_PDDR |= 0x00040000;
-			BME_mask = 0x00040000;
-			BME_bitSet = (int *)&GPIOB_PSOR;
-			BME_bitClear = (int *)&GPIOB_PCOR;
+		case PTB18:
+			bitSet = (unsigned int*)&GPIOB_PSOR;
+			bitClear = (unsigned int*)&GPIOB_PCOR;
+			bitMask = 0x00040000;
 			break;
-		case(PTB19):
-			PORTB_PCR19 = 0x00000100;
-			BME_mask = 0x00080000;
-			GPIOB_PDDR |= 0x00080000;
-			BME_bitSet = (int *)0x400FF044;
-			BME_bitClear = (int *)0x400FF048;
+		case PTB19:
+			bitSet = (unsigned int*)&GPIOB_PSOR;
+			bitClear = (unsigned int*)&GPIOB_PCOR;
+			bitMask = 0x00080000;
 			break;
-		case(PTD1):
-			PORTD_PCR1 = 0x00000100;
-			GPIOD_PDDR |= 0x00000002;
-			BME_mask = 0x00000002;
-			BME_bitSet = (int *)0x400FF0C4;
-			BME_bitClear = (int *)0x400FF0C8;
-			break;
+		case PTD1:
+			bitSet = (unsigned int*)&GPIOD_PSOR;
+			bitClear = (unsigned int*)&GPIOD_PCOR;
+			bitMask = 0x00000002;			
 		default:
 			break;
 	}
-}
-
-void GPIO::digitalWrite(DigitalState pDigitalState)
-{
 	if(pDigitalState == HIGH)
 	{
-		*BME_bitSet = BME_mask;
+		*bitSet = bitMask;
 	} else {
-		*BME_bitClear = BME_mask;
+		*bitClear = bitMask;
 	}
 }

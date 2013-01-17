@@ -26,41 +26,30 @@
 #include "LED_rgb.h"
 #include "Timer.h"
 
-// Must be declared above main since it will be used in the IRQ handler.
-Timer myTimer;
-
 int main()
 {
-	// Peripheral Classes
-	GPIO myRedLED(PTB18);
-	GPIO myGreenLED(PTB19);
-	GPIO myBlueLED(PTD1);
-	
-	// Driver Classes
-	RGBLED myRGB(&myRedLED, &myGreenLED, &myBlueLED);
-	
-	// Application Classes
-	MorseCodeMessenger messenger(&myRGB, &myTimer);
-	
 	// Message
 	char morseMessage[] = "MICRO CONTROLLER CENTRAL";
 	
-	// Do something
-	messenger.setTempo(100);
-	messenger.sendMessage(morseMessage);
+	// Initializers
+	gpioInit();
+	timerInit();
+	rgbInit(PTB18, PTB19, PTD1);
+	morseInit();
 	
-	// Test access controls
-	// messenger.removeCriticalSafety();
+	// Do something
+	morseSetTempo(100);
+	morseSendMessage(morseMessage);
+	
+	// Test access control
+	morseRemoveCriticalSafety();
 	
 	while(1);
 	return 0;
 }
 
-extern "C" {
 
-	void TPM0_IRQHandler()
-	{
-		myTimer.timerIRQHook();
-	}
-
+void TPM0_IRQHandler()
+{
+	timerIRQHook();
 }

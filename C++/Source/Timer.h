@@ -34,6 +34,7 @@ class Timer
 		char hasTimeoutOccured();
 	private:
 		void (*timerCallback)();
+		//void defaultAttachFunction();
 		int counter;
 		int timeout;
 		char timeoutBool;

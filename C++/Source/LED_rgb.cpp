@@ -30,37 +30,37 @@ RGBLED::RGBLED(GPIO *redLED, GPIO *greenLED, GPIO *blueLED)
 	green = greenLED;
 	blue = blueLED;
 	
-	red->digitalWrite(LOW);
-	green->digitalWrite(LOW);
-	blue->digitalWrite(LOW);
+	red->digitalWrite(HIGH);
+	green->digitalWrite(HIGH);
+	blue->digitalWrite(HIGH);
 }
 
 void RGBLED::redOn()
 {
-	red->digitalWrite(HIGH);
+	red->digitalWrite(LOW);
 }
 
 void RGBLED::redOff()
 {
-	red->digitalWrite(LOW);
+	red->digitalWrite(HIGH);
 }
 
 void RGBLED::greenOn()
 {
-	green->digitalWrite(HIGH);
+	green->digitalWrite(LOW);
 }
 
 void RGBLED::greenOff()
 {
-	green->digitalWrite(LOW);
+	green->digitalWrite(HIGH);
 }
 
 void RGBLED::blueOn()
 {
-	blue->digitalWrite(HIGH);
+	blue->digitalWrite(LOW);
 }
 
 void RGBLED::blueOff()
 {
-	blue->digitalWrite(LOW);
+	blue->digitalWrite(HIGH);
 }

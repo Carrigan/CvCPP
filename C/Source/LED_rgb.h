@@ -21,46 +21,17 @@
     see <http://www.gnu.org/licenses/>.
  */
 
-#include "MorseCodeMessenger.h"
+#ifndef RGBLED_H
+#define RGBLED_H
+
 #include "GPIO.h"
-#include "LED_rgb.h"
-#include "Timer.h"
 
-// Must be declared above main since it will be used in the IRQ handler.
-Timer myTimer;
+void rgbInit(Pin redLED, Pin greenLED, Pin blueLED);
+void rgbRedOn(void);
+void rgbRedOff(void);
+void rgbGreenOn(void);
+void rgbGreenOff(void);
+void rgbBlueOn(void);
+void rgbBlueOff(void);
 
-int main()
-{
-	// Peripheral Classes
-	GPIO myRedLED(PTB18);
-	GPIO myGreenLED(PTB19);
-	GPIO myBlueLED(PTD1);
-	
-	// Driver Classes
-	RGBLED myRGB(&myRedLED, &myGreenLED, &myBlueLED);
-	
-	// Application Classes
-	MorseCodeMessenger messenger(&myRGB, &myTimer);
-	
-	// Message
-	char morseMessage[] = "MICRO CONTROLLER CENTRAL";
-	
-	// Do something
-	messenger.setTempo(100);
-	messenger.sendMessage(morseMessage);
-	
-	// Test access controls
-	// messenger.removeCriticalSafety();
-	
-	while(1);
-	return 0;
-}
-
-extern "C" {
-
-	void TPM0_IRQHandler()
-	{
-		myTimer.timerIRQHook();
-	}
-
-}
+#endif

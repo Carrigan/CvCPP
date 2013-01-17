@@ -22,6 +22,11 @@
  */
 
 #include "MorseCodeMessenger.h"
+#include "Timer.h"
+
+int tempo;
+int generateMorseIndexFromCharacter(char message);
+void morseRemoveCriticalSafety(void);
 
 // 0-9, A-Z, SPACE
 const int morseLengths[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 
@@ -76,7 +81,7 @@ const char *morseTranslation[] = {morse0, morse1, morse2, morse3, morse4, morse5
 																	morseR, morseS, morseT, morseU, morseV, morseW, morseX, morseY, morseZ,
 																	morseSPACE};
 
-int MorseCodeMessenger::generateMorseIndexFromCharacter(char message)
+int generateMorseIndexFromCharacter(char message)
 {
 	// For numbers, map 48-57 to 0-9
 	if(message >= '0' && message <= '9')
@@ -95,65 +100,64 @@ int MorseCodeMessenger::generateMorseIndexFromCharacter(char message)
 		return 36;
 }
 
-MorseCodeMessenger::MorseCodeMessenger(RGBLED *pLED, Timer *pTimer)
+void morseInit()
 {
-	tempo = 0;
-	
-	myTimer = pTimer;
-	myLED = pLED;
-	
+	tempo = 0;	
 }
 
-void MorseCodeMessenger::sendMessage(char *message)
+void morseSendMessage(char *pMessage)
 {
+	char *message = pMessage;
+	int i;
+	
 	while(*message != 0)
 	{
 		// Convert the letter to an index for the lookup arrays
 		int arrayIndex = generateMorseIndexFromCharacter(*message);
 		
 		// For each symbol in the morse version of the letter, blink;
-		for(int i = 0; i < morseLengths[arrayIndex]; i++)
+		for(i = 0; i < morseLengths[arrayIndex]; i++)
 		{
 			char currentOutput = *(morseTranslation[arrayIndex]+i);
 			switch(currentOutput)
 			{
 				case 0:
-					myTimer->start(tempo*2);
-					while(!myTimer->hasTimeoutOccured());
+					timerStart(tempo*2);
+					while(!timerHasTimeoutOccured());
 					break;
 				case 1:
-					myLED->greenOn();
-					myTimer->start(tempo);
-					while(!myTimer->hasTimeoutOccured());
-					myLED->greenOff();
+					rgbGreenOn();
+					timerStart(tempo);
+					while(!timerHasTimeoutOccured());
+					rgbGreenOff();
 					break;
 				case 2:
-					myLED->greenOn();
-					myTimer->start(tempo*3);
-					while(!myTimer->hasTimeoutOccured());
-					myLED->greenOff();
+					rgbGreenOn();
+					timerStart(tempo*3);
+					while(!timerHasTimeoutOccured());
+					rgbGreenOff();
 					break;
 			}
 			// Small delay after each blink
-			myTimer->start(tempo);
-			while(!myTimer->hasTimeoutOccured());
+			timerStart(tempo);
+			while(!timerHasTimeoutOccured());
 		}
 		
 		// Small delay after each letter
-		myTimer->start(tempo*3);
-		while(!myTimer->hasTimeoutOccured());
+		timerStart(tempo*3);
+		while(!timerHasTimeoutOccured());
 		
 		// Increment letter
 		message++;
 	}
 }
 
-void MorseCodeMessenger::setTempo(int newTempo)
+void morseSetTempo(int newTempo)
 {
 	tempo = newTempo;
 }
 
-void MorseCodeMessenger::removeCriticalSafety()
+void morseRemoveCriticalSafety()
 {
 	// WARNING: This function has a 30% chance
 	// of calling Cthulu to the mortal realm.

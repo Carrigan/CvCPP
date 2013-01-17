@@ -21,46 +21,50 @@
     see <http://www.gnu.org/licenses/>.
  */
 
-#include "MorseCodeMessenger.h"
-#include "GPIO.h"
 #include "LED_rgb.h"
-#include "Timer.h"
+#include "GPIO.h"
 
-// Must be declared above main since it will be used in the IRQ handler.
-Timer myTimer;
+Pin red;
+Pin green;
+Pin blue;
 
-int main()
+void rgbInit(Pin redLED, Pin greenLED, Pin blueLED)
 {
-	// Peripheral Classes
-	GPIO myRedLED(PTB18);
-	GPIO myGreenLED(PTB19);
-	GPIO myBlueLED(PTD1);
+	red = redLED;
+	green = greenLED;
+	blue = blueLED;
 	
-	// Driver Classes
-	RGBLED myRGB(&myRedLED, &myGreenLED, &myBlueLED);
-	
-	// Application Classes
-	MorseCodeMessenger messenger(&myRGB, &myTimer);
-	
-	// Message
-	char morseMessage[] = "MICRO CONTROLLER CENTRAL";
-	
-	// Do something
-	messenger.setTempo(100);
-	messenger.sendMessage(morseMessage);
-	
-	// Test access controls
-	// messenger.removeCriticalSafety();
-	
-	while(1);
-	return 0;
+	gpioDigitalWrite(HIGH, red);
+	gpioDigitalWrite(HIGH, green);
+	gpioDigitalWrite(HIGH, blue);
 }
 
-extern "C" {
+void rgbRedOn()
+{
+	gpioDigitalWrite(LOW, red);
+}
 
-	void TPM0_IRQHandler()
-	{
-		myTimer.timerIRQHook();
-	}
+void rgbRedOff()
+{
+	gpioDigitalWrite(HIGH, red);
+}
 
+void rgbGreenOn()
+{
+	gpioDigitalWrite(LOW, green);
+}
+
+void rgbGreenOff()
+{
+	gpioDigitalWrite(HIGH, green);
+}
+
+void rgbBlueOn()
+{
+	gpioDigitalWrite(LOW, blue);
+}
+
+void rgbBlueOff()
+{
+	gpioDigitalWrite(HIGH, blue);
 }

@@ -33,6 +33,7 @@ class MorseCodeMessenger
 	private:
 		int tempo;
 	  int generateMorseIndexFromCharacter(char);
+		void removeCriticalSafety();
 		RGBLED *myLED;
 		Timer *myTimer;
 };

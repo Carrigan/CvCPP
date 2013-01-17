@@ -407,29 +407,34 @@
           <GroupName>Source</GroupName>
           <Files>
             <File>
-              <FileName>main.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\Source\main.cpp</FilePath>
+              <FileName>GPIO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\GPIO.c</FilePath>
             </File>
             <File>
-              <FileName>MorseCodeMessenger.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\Source\MorseCodeMessenger.cpp</FilePath>
+              <FileName>LED_rgb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\LED_rgb.c</FilePath>
             </File>
             <File>
-              <FileName>LED_rgb.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\Source\LED_rgb.cpp</FilePath>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\main.c</FilePath>
             </File>
             <File>
-              <FileName>GPIO.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\Source\GPIO.cpp</FilePath>
+              <FileName>MorseCodeMessenger.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\MorseCodeMessenger.c</FilePath>
             </File>
             <File>
-              <FileName>Timer.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\Source\Timer.cpp</FilePath>
+              <FileName>system_MKL25Z4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\system_MKL25Z4.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\Timer.c</FilePath>
             </File>
           </Files>
         </Group>

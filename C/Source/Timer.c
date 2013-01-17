@@ -23,11 +23,16 @@
 
 #include "Timer.h"
 #include "MKL25Z4.h"
-void defaultAttachFunction(void);
+
+void (*mTimerCallback)();
+static int mCounter;
+static int mTimeout;
+static char mTimeoutBool;
+static void defaultAttachFunction(void);
 
 
 // For the max clock:
-Timer::Timer()
+void timerInit()
 {
 	// Enable Clock
 	SIM_SCGC6 |= 0x01000000;
@@ -41,44 +46,44 @@ Timer::Timer()
 	// Set the timer for 1ms
 	TPM0_MOD = 4000;
 	
-	// Set hte boolean
-	timeoutBool = 0;
+	// Set the boolean
+	mTimeoutBool = 0;
 	
-	timerCallback = &defaultAttachFunction;
+	mTimerCallback = &defaultAttachFunction;
 }
 
-char Timer::hasTimeoutOccured()
+char timerHasTimeoutOccured()
 {
-	if(timeoutBool == 1)
+	if(mTimeoutBool == 1)
 	{
-		timeoutBool = 0;
+		mTimeoutBool = 0;
 		return 1;
 	}
 	
 	return 0;
 }
 
-void Timer::start(int pCounter)
+void timerStart(int timeout)
 {
 	TPM0_SC |= 0x00000008;
-	counter = 0;
-	timeout = pCounter;
+	mCounter = 0;
+	mTimeout = timeout;
 }
 
-void Timer::attachCallback(void(*pFunction)())
+void timerAttachCallback(void(*pFunction)())
 {
-	timerCallback = pFunction;
+	mTimerCallback = pFunction;
 }
 
-void Timer::timerIRQHook()
+void timerIRQHook()
 {
-	if(counter == timeout)
+	if(mCounter == mTimeout)
 	{
 		TPM0_SC &= ~0x00000008;
-		timerCallback();
-		timeoutBool = 1;
+		mTimerCallback();
+		mTimeoutBool = 1;
 	} else {
-		counter++;
+		mCounter++;
 	}
 	TPM0_SC |= 0x00000080;
 }

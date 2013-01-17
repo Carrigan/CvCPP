@@ -21,46 +21,23 @@
     see <http://www.gnu.org/licenses/>.
  */
 
-#include "MorseCodeMessenger.h"
-#include "GPIO.h"
-#include "LED_rgb.h"
-#include "Timer.h"
+#ifndef GPIO_H
+#define GPIO_H
 
-// Must be declared above main since it will be used in the IRQ handler.
-Timer myTimer;
-
-int main()
+typedef enum 
 {
-	// Peripheral Classes
-	GPIO myRedLED(PTB18);
-	GPIO myGreenLED(PTB19);
-	GPIO myBlueLED(PTD1);
-	
-	// Driver Classes
-	RGBLED myRGB(&myRedLED, &myGreenLED, &myBlueLED);
-	
-	// Application Classes
-	MorseCodeMessenger messenger(&myRGB, &myTimer);
-	
-	// Message
-	char morseMessage[] = "MICRO CONTROLLER CENTRAL";
-	
-	// Do something
-	messenger.setTempo(100);
-	messenger.sendMessage(morseMessage);
-	
-	// Test access controls
-	// messenger.removeCriticalSafety();
-	
-	while(1);
-	return 0;
-}
+	PTB18,
+	PTB19,
+	PTD1
+} Pin;
 
-extern "C" {
+typedef enum 
+{
+	HIGH,
+	LOW
+} DigitalState;
 
-	void TPM0_IRQHandler()
-	{
-		myTimer.timerIRQHook();
-	}
+void gpioInit(void);
+void gpioDigitalWrite(DigitalState pDigitalState, Pin pPin);
 
-}
+#endif
